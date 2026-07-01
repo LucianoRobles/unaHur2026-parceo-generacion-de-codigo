@@ -1,4 +1,4 @@
-# Lenguaje a crear: CookLang
+# Lenguaje CookLang
 
 ## Objetivo
 
