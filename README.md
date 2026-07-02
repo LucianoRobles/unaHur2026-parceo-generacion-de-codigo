@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-El objetivo de **CookLang** es definir un lenguaje de programación simple orientado a la descripción de recetas de cocina.
+El objetivo de **CookLang** es definir un lenguaje de programación simple orientado a la descripción de recetas de cocina. 
 
 El lenguaje permite representar una receta mediante instrucciones estructuradas, como agregar ingredientes, mezclar, cocinar, enfriar, indicar cantidad de porciones y ejecutar pasos condicionales según una condición determinada.
 
