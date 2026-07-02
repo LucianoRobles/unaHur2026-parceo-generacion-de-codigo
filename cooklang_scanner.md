@@ -85,7 +85,7 @@ Validaciones adicionales:
 - Si lee `"`, pasa a `q6` para formar un `STRING`.
 - Si lee `{`, `}` o `;`, reconoce directamente el token correspondiente.
 - Los espacios, tabulaciones y saltos de línea se ignoran.
-- Cuando se reconoce un `ID`, luego se verifica si en realidad es una palabra reservada o una unidad de medida.
+- Cuando el autómata reconoce una cadena alfabética, primero la acepta como posible ID. Luego se consulta una tabla de palabras reservadas y unidades para determinar el token final.
 - El retroceso sirve para devolver el último carácter leído cuando ese carácter no pertenece al token actual.
 
 ---
@@ -284,7 +284,7 @@ while True:
         break
 ```
 
-## Salida esperada aproximada
+## Salida esperada
 
 ```text
 RECIPE -> Recipe

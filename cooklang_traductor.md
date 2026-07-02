@@ -216,7 +216,7 @@ Recipe "Pan rapido" {
     Add 200ml agua;
     Add 10g sal;
     Mix harina agua sal;
-    If masa_liquida then Mix harina masa else Bake 30 minutes;
+    If masa_liquida then Mix harina agua else Bake 30 minutes;
     Serve 2 portions;
 }
 ```
