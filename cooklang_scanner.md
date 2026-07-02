@@ -80,182 +80,182 @@ Validaciones adicionales:
 ## Explicación breve de la tabla
 
 - `q0` es el estado inicial.
-- Si lee una letra, pasa a `q1` para formar identificadores o palabras reservadas.
+- Si lee una letra, pasa a `q1` para formar identificadores, palabras reservadas o unidades.
 - Si lee un dígito, pasa a `q4` para formar números enteros.
 - Si lee `"`, pasa a `q6` para formar un `STRING`.
 - Si lee `{`, `}` o `;`, reconoce directamente el token correspondiente.
 - Los espacios, tabulaciones y saltos de línea se ignoran.
-- Cuando el autómata reconoce una cadena alfabética, primero la acepta como posible ID. Luego se consulta una tabla de palabras reservadas y unidades para determinar el token final.
+- Cuando el autómata reconoce una cadena alfabética, primero la acepta como posible `ID`. Luego se consulta una tabla de palabras reservadas y unidades para determinar el token final.
 - El retroceso sirve para devolver el último carácter leído cuando ese carácter no pertenece al token actual.
+
+Ejemplos de clasificación posterior:
+
+```text
+Recipe  → RECIPE
+Add     → ADD
+g       → UNIT
+harina  → ID
+```
 
 ---
 
-# CÓDIGO PYTHON DEL SCANNER
+# CÓDIGO PYTHON DEL SCANNER CON PLY
+
+Para la implementación práctica del scanner se utiliza la herramienta **PLY**, específicamente el módulo `ply.lex`.
+
+La tabla de transiciones anterior representa la definición formal del autómata.  
+En cambio, PLY permite implementar el scanner mediante expresiones regulares y funciones asociadas a cada token.
 
 ```python
-class LexerCookLang:
+import ply.lex as lex
 
-    ERROR = -1
-    ACEPTAR = 0
-    FIN = 1
 
-    def __init__(self, texto):
-        self.texto = texto
-        self.cursor = -1
-        self.inicio_lexema = 0
-        self.token = None
-        self.lexema = None
-        self.retroceso = None
+# ---------------------------------------
+# Palabras reservadas y unidades
+# ---------------------------------------
 
-        self.palabras_reservadas = {
-            "Recipe": "RECIPE",
-            "Add": "ADD",
-            "Mix": "MIX",
-            "Bake": "BAKE",
-            "Chill": "CHILL",
-            "If": "IF",
-            "then": "THEN",
-            "else": "ELSE",
-            "Serve": "SERVE",
-            "minutes": "MINUTES",
-            "portions": "PORTIONS"
-        }
+reserved = {
+    "Recipe": "RECIPE",
+    "Add": "ADD",
+    "Mix": "MIX",
+    "Bake": "BAKE",
+    "Chill": "CHILL",
+    "If": "IF",
+    "then": "THEN",
+    "else": "ELSE",
+    "Serve": "SERVE",
+    "minutes": "MINUTES",
+    "portions": "PORTIONS",
+    "g": "UNIT",
+    "ml": "UNIT",
+    "pcs": "UNIT"
+}
 
-        self.unidades = {
-            "g": "UNIT",
-            "ml": "UNIT",
-            "pcs": "UNIT"
-        }
 
-    def getCaracter(self):
-        if (self.cursor + 1) < len(self.texto):
-            self.cursor += 1
-            return self.texto[self.cursor]
-        return "EOF"
+# ---------------------------------------
+# Lista de tokens
+# ---------------------------------------
 
-    def esLetra(self, c):
-        return len(c) == 1 and c.isalpha()
+tokens = (
+    "RECIPE",
+    "ADD",
+    "MIX",
+    "BAKE",
+    "CHILL",
+    "IF",
+    "THEN",
+    "ELSE",
+    "SERVE",
+    "MINUTES",
+    "PORTIONS",
+    "ID",
+    "INT",
+    "STRING",
+    "UNIT",
+    "LLAVE_ABRE",
+    "LLAVE_CIERRA",
+    "PYC"
+)
 
-    def esDigito(self, c):
-        return len(c) == 1 and c >= "0" and c <= "9"
 
-    def esBlanco(self, c):
-        return c == " " or c == "\t" or c == "\n" or c == "\r"
+# ---------------------------------------
+# Expresiones regulares simples
+# ---------------------------------------
 
-    def esCaracterID(self, c):
-        return self.esLetra(c) or self.esDigito(c) or c == "_"
+t_LLAVE_ABRE = r"\{"
+t_LLAVE_CIERRA = r"\}"
+t_PYC = r";"
 
-    def validarID(self, lexema):
-        if len(lexema) == 0:
-            return False
 
-        if not self.esLetra(lexema[0]):
-            return False
+# ---------------------------------------
+# Caracteres ignorados
+# ---------------------------------------
 
-        if lexema[-1] == "_":
-            return False
+t_ignore = " \t\r"
 
-        if "__" in lexema:
-            return False
 
-        return True
+# ---------------------------------------
+# Token STRING
+# Reconoce texto encerrado entre comillas dobles
+# ---------------------------------------
 
-    def clasificarID(self, lexema):
-        if lexema in self.palabras_reservadas:
-            return self.palabras_reservadas[lexema]
+def t_STRING(t):
+    r'"[^"\n]*"'
+    return t
 
-        if lexema in self.unidades:
-            return self.unidades[lexema]
 
-        if self.validarID(lexema):
-            return "ID"
+# ---------------------------------------
+# Token INT
+# Reconoce uno o más dígitos
+# ---------------------------------------
 
-        raise Exception(f"Identificador inválido: {lexema}")
+def t_INT(t):
+    r"\d+"
+    t.value = int(t.value)
+    return t
 
-    def siguienteToken(self):
-        estado = 0
-        self.token = None
-        self.lexema = None
-        self.retroceso = 0
 
-        while True:
-            c = self.getCaracter()
+# ---------------------------------------
+# Token ID, palabras reservadas y unidades
+# ---------------------------------------
 
-            if estado == 0:
-                self.inicio_lexema = self.cursor
+def t_ID(t):
+    r"[a-zA-Z][a-zA-Z0-9_]*"
 
-                if c == "EOF":
-                    self.token = "EOF"
-                    self.lexema = "EOF"
-                    return self.token, self.lexema
+    if t.value.endswith("_"):
+        raise SyntaxError(f"Identificador inválido: {t.value}")
 
-                elif self.esBlanco(c):
-                    estado = 0
+    if "__" in t.value:
+        raise SyntaxError(f"Identificador inválido: {t.value}")
 
-                elif self.esLetra(c):
-                    estado = 1
+    t.type = reserved.get(t.value, "ID")
+    return t
 
-                elif self.esDigito(c):
-                    estado = 4
 
-                elif c == '"':
-                    estado = 6
+# ---------------------------------------
+# Contador de líneas
+# ---------------------------------------
 
-                elif c == "{":
-                    self.token = "LLAVE_ABRE"
-                    self.lexema = c
-                    return self.token, self.lexema
+def t_newline(t):
+    r"\n+"
+    t.lexer.lineno += len(t.value)
 
-                elif c == "}":
-                    self.token = "LLAVE_CIERRA"
-                    self.lexema = c
-                    return self.token, self.lexema
 
-                elif c == ";":
-                    self.token = "PYC"
-                    self.lexema = c
-                    return self.token, self.lexema
+# ---------------------------------------
+# Manejo de errores léxicos
+# ---------------------------------------
 
-                else:
-                    raise Exception(f"Caracter no reconocido: {c}")
+def t_error(t):
+    raise SyntaxError(
+        f"Caracter no reconocido '{t.value[0]}' en la línea {t.lexer.lineno}"
+    )
 
-            elif estado == 1:
-                if self.esCaracterID(c):
-                    estado = 1
-                elif c == "EOF":
-                    self.lexema = self.texto[self.inicio_lexema:self.cursor + 1]
-                    self.token = self.clasificarID(self.lexema)
-                    return self.token, self.lexema
-                else:
-                    self.cursor -= 1
-                    self.lexema = self.texto[self.inicio_lexema:self.cursor + 1]
-                    self.token = self.clasificarID(self.lexema)
-                    return self.token, self.lexema
 
-            elif estado == 4:
-                if self.esDigito(c):
-                    estado = 4
-                elif c == "EOF":
-                    self.lexema = self.texto[self.inicio_lexema:self.cursor + 1]
-                    self.token = "INT"
-                    return self.token, self.lexema
-                else:
-                    self.cursor -= 1
-                    self.lexema = self.texto[self.inicio_lexema:self.cursor + 1]
-                    self.token = "INT"
-                    return self.token, self.lexema
+# ---------------------------------------
+# Construcción del lexer
+# ---------------------------------------
 
-            elif estado == 6:
-                if c == "EOF":
-                    raise Exception("Cadena sin cerrar")
+lexer = lex.lex()
 
-                elif c == '"':
-                    self.lexema = self.texto[self.inicio_lexema:self.cursor + 1]
-                    self.token = "STRING"
-                    return self.token, self.lexema
 
-                else:
-                    estado = 6
+# ---------------------------------------
+# Función auxiliar para probar el scanner
+# ---------------------------------------
+
+def analizar_codigo(codigo):
+    lexer.input(codigo)
+
+    tokens_encontrados = []
+
+    while True:
+        tok = lexer.token()
+
+        if not tok:
+            break
+
+        tokens_encontrados.append((tok.type, tok.value))
+
+    return tokens_encontrados
 ```
 
 ---
@@ -274,14 +274,10 @@ Recipe "Tarta de manzana" {
 }
 '''
 
-lexer = LexerCookLang(programa)
+resultado = analizar_codigo(programa)
 
-while True:
-    token, lexema = lexer.siguienteToken()
+for token, lexema in resultado:
     print(token, "->", lexema)
-
-    if token == "EOF":
-        break
 ```
 
 ## Salida esperada
@@ -326,7 +322,46 @@ INT -> 4
 PORTIONS -> portions
 PYC -> ;
 LLAVE_CIERRA -> }
-EOF -> EOF
+```
+
+---
+
+# Prueba con identificador inválido
+
+```python
+programa = '''
+Recipe "Prueba" {
+    Add 200g masa_;
+}
+'''
+
+resultado = analizar_codigo(programa)
+```
+
+## Salida esperada
+
+```text
+SyntaxError: Identificador inválido: masa_
+```
+
+---
+
+# Prueba con cadena sin cerrar
+
+```python
+programa = '''
+Recipe "Tarta de manzana {
+    Add 200g harina;
+}
+'''
+
+resultado = analizar_codigo(programa)
+```
+
+## Salida esperada
+
+```text
+SyntaxError: Caracter no reconocido '"' en la línea 2
 ```
 
 ---
@@ -353,8 +388,32 @@ Lo mismo ocurre con:
 2pcs
 ```
 
+Esto sucede porque el scanner reconoce primero el número entero y luego reconoce la unidad como una palabra reservada clasificada como `UNIT`.
+
 Esto simplifica el parser, porque la regla sintáctica queda:
 
 ```text
 quantity → INT UNIT
 ```
+
+Por lo tanto, el lenguaje acepta tanto:
+
+```text
+Add 200g harina;
+```
+
+como:
+
+```text
+Add 200 g harina;
+```
+
+---
+
+# Conclusión
+
+El scanner de CookLang fue definido formalmente mediante una tabla de lexemas y una tabla de transiciones.
+
+Para la implementación práctica en Python se utilizó **PLY**, que permite definir los tokens mediante expresiones regulares.
+
+Esta implementación reconoce correctamente palabras reservadas, identificadores, números enteros, cadenas de texto, unidades de medida y símbolos especiales, dejando preparada la secuencia de tokens para ser utilizada por el parser.

@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-El objetivo de **CookLang** es definir un lenguaje de programación simple orientado a la descripción de recetas de cocina. 
+El objetivo de **CookLang** es definir un lenguaje de programación simple orientado a la descripción de recetas de cocina.
 
 El lenguaje permite representar una receta mediante instrucciones estructuradas, como agregar ingredientes, mezclar, cocinar, enfriar, indicar cantidad de porciones y ejecutar pasos condicionales según una condición determinada.
 
@@ -27,23 +27,23 @@ Recipe "Tarta de manzana" {
 
 El lenguaje **CookLang** permite:
 
-* Definir una receta con un nombre.
-* Agregar ingredientes con cantidades y unidades.
-* Mezclar ingredientes.
-* Cocinar una preparación durante una cantidad determinada de minutos.
-* Enfriar una preparación durante una cantidad determinada de minutos.
-* Utilizar una estructura condicional simple para decidir entre dos acciones posibles.
-* Indicar la cantidad de porciones que rinde la receta.
+- Definir una receta con un nombre.
+- Agregar ingredientes con cantidades y unidades.
+- Mezclar ingredientes.
+- Cocinar una preparación durante una cantidad determinada de minutos.
+- Enfriar una preparación durante una cantidad determinada de minutos.
+- Utilizar una estructura condicional simple para decidir entre dos acciones posibles.
+- Indicar la cantidad de porciones que rinde la receta.
 
 El lenguaje no contempla, en esta primera versión:
 
-* Cálculo nutricional.
-* Temperaturas de cocción.
-* Conversión automática de unidades.
-* Bucles o repeticiones.
-* Validación de disponibilidad real de ingredientes.
-* Subrecetas o funciones.
-* Operaciones matemáticas sobre cantidades.
+- Cálculo nutricional.
+- Temperaturas de cocción.
+- Conversión automática de unidades.
+- Bucles o repeticiones.
+- Validación de disponibilidad real de ingredientes.
+- Subrecetas o funciones.
+- Operaciones matemáticas sobre cantidades.
 
 El alcance está limitado a recetas simples, escritas con una estructura clara y fácil de analizar mediante herramientas de análisis léxico, sintáctico y semántico.
 
@@ -131,16 +131,16 @@ STRING → "\"" caracter* "\""
 Las unidades permitidas son:
 
 ```text
-g
-ml
-pcs
+g   → UNIT
+ml  → UNIT
+pcs → UNIT
 ```
 
 Donde:
 
-* `g` representa gramos.
-* `ml` representa mililitros.
-* `pcs` representa unidades o piezas.
+- `g` representa gramos.
+- `ml` representa mililitros.
+- `pcs` representa unidades o piezas.
 
 ### Símbolos especiales
 
@@ -188,12 +188,36 @@ action → Bake INT minutes
 
 condition → ID
 
-quantity → INT unit
+quantity → INT UNIT
 
 unit → g
      | ml
      | pcs
 ```
+
+Aclaración sobre el punto y coma en condicionales, en las instrucciones normales, Bake, Chill y Mix terminan con ;.
+
+Ejemplo:
+
+```text
+Bake 45 minutes;
+```
+
+Dentro de un condicional, las acciones no llevan ; individual. El punto y coma se coloca al final de toda la instrucción condicional.
+
+Ejemplo válido:
+
+```text
+If tiene_horno then Bake 45 minutes else Chill 60 minutes;
+```
+
+Ejemplo inválido:
+
+```text
+If tiene_horno then Bake 45 minutes; else Chill 60 minutes;
+```
+
+Esto se debe a que toda la estructura If then else se considera una sola instrucción.
 
 Ejemplo válido:
 
@@ -355,21 +379,21 @@ If tiene_horno then Bake 45 minutes else Chill 60 minutes;
 
 Semánticamente, significa:
 
-* Si la condición `tiene_horno` es verdadera, se ejecuta la acción `Bake 45 minutes`.
-* Si la condición `tiene_horno` es falsa, se ejecuta la acción `Chill 60 minutes`.
+- Si la condición `tiene_horno` es verdadera, se ejecuta la acción `Bake 45 minutes`.
+- Si la condición `tiene_horno` es falsa, se ejecuta la acción `Chill 60 minutes`.
 
 También se permite utilizar `Mix` como acción dentro del condicional.
 
 Ejemplo:
 
 ```text
-If masa_liquida then Mix harina masa else Bake 30 minutes;
+If masa_liquida then Mix harina agua else Bake 30 minutes;
 ```
 
 Semánticamente, significa:
 
-* Si la condición `masa_liquida` es verdadera, se mezclan los ingredientes `harina` y `masa`.
-* Si la condición `masa_liquida` es falsa, la preparación se cocina durante `30 minutos`.
+- Si la condición `masa_liquida` es verdadera, se mezclan los ingredientes `harina` y `masa`.
+- Si la condición `masa_liquida` es falsa, la preparación se cocina durante `30 minutos`.
 
 Esta estructura permite que el lenguaje tenga comportamiento condicional, cumpliendo con el requisito de incluir al menos una decisión dentro del programa.
 
@@ -377,7 +401,7 @@ Esta estructura permite que el lenguaje tenga comportamiento condicional, cumpli
 
 ## Posible traducción del lenguaje
 
-Una receta escrita en **CookLang** podría traducirse a una estructura JSON para ser utilizada por una aplicación.
+La traducción elegida para **CookLang** será una estructura JSON que representa la receta, sus ingredientes, pasos, condicionales y cantidad de porciones.
 
 Ejemplo en CookLang:
 
