@@ -211,14 +211,14 @@ def p_program(p):
     servings = None
 
     for step in p[4]:
-        if step["type"] == "ingredient":
+        if step.get("type") == "ingredient":
             ingredients.append({
                 "name": step["name"],
                 "quantity": step["quantity"],
                 "unit": step["unit"]
             })
 
-        elif step["type"] == "servings":
+        elif step.get("type") == "servings":
             servings = step["value"]
 
         else:
