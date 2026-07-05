@@ -1,4 +1,4 @@
-# Acciones semánticas - CookLang
+# Acciones semánticas de CookLang
 
 ## Objetivo
 
