@@ -61,7 +61,7 @@ P
 
 ---
 
-# Producciones
+## Producciones
 
 ```text
 P → RECIPE STRING LLAVE_ABRE STEPS LLAVE_CIERRA EOF
@@ -100,7 +100,7 @@ IDLIST → ID
 
 ---
 
-# Tabla de parseo del ASDB
+## Tabla de parseo del ASDB
 
 | Estado | Transición |
 | ------ | ---------- |
@@ -151,7 +151,7 @@ IDLIST → ID
 
 ---
 
-# Parser con PLY
+## Parser con PLY
 
 Para la implementación práctica del parser se utiliza **PLY**, específicamente el módulo `ply.yacc`.
 
@@ -159,7 +159,7 @@ El scanner ya definido con `ply.lex` genera los tokens, y el parser consume esa 
 
 ---
 
-## Código Python del parser con PLY
+### Código Python del parser con PLY
 
 ```python
 import ply.yacc as yacc
@@ -364,7 +364,7 @@ parser = yacc.yacc(start="programa")
 
 ---
 
-# Prueba del parser
+## Prueba del parser
 
 ```python
 programa = '''
@@ -382,7 +382,7 @@ resultado = parser.parse(programa, lexer=lexer)
 print(resultado)
 ```
 
-## Salida esperada
+### Salida esperada
 
 ```text
 {
@@ -406,7 +406,7 @@ print(resultado)
 
 ---
 
-# Prueba con `Mix` dentro del condicional
+## Prueba con `Mix` dentro del condicional
 
 ```python
 programa = '''
@@ -424,7 +424,7 @@ resultado = parser.parse(programa, lexer=lexer)
 print(resultado)
 ```
 
-## Salida esperada
+### Salida esperada
 
 ```text
 {
@@ -448,7 +448,7 @@ print(resultado)
 
 ---
 
-# Prueba con programa inválido
+## Prueba con programa inválido
 
 ```python
 programa = '''
@@ -460,7 +460,7 @@ Recipe "Tarta de manzana" {
 resultado = parser.parse(programa, lexer=lexer)
 ```
 
-## Salida esperada
+### Salida esperada
 
 ```text
 SyntaxError: Error sintáctico cerca de 'harina'
@@ -468,7 +468,7 @@ SyntaxError: Error sintáctico cerca de 'harina'
 
 ---
 
-# Relación entre scanner y parser
+## Relación entre scanner y parser
 
 El scanner transforma el texto fuente en tokens.
 
@@ -498,7 +498,7 @@ Si la secuencia coincide con la producción, la instrucción es sintácticamente
 
 ---
 
-# Validaciones que todavía no realiza el parser
+## Validaciones que todavía no realiza el parser
 
 El parser solamente valida la estructura sintáctica del programa.
 
@@ -512,3 +512,13 @@ Todavía no verifica cuestiones semánticas como:
 - Si una condición tiene valor verdadero o falso.
 
 Estas validaciones corresponden a la etapa de acciones semánticas.
+
+---
+
+## Conclusión
+
+El parser de CookLang fue definido formalmente mediante una Gramática Independiente del Contexto y su correspondiente tabla de parseo de un Autómata a Pila (ASDB).
+
+Para la implementación práctica en Python se utilizó **PLY**, específicamente el módulo `ply.yacc`, que construye el parser a partir de las producciones expresadas como docstrings de funciones.
+
+Esta implementación valida que la secuencia de tokens generada por el scanner respete la estructura sintáctica del lenguaje, dejando el árbol de la receta preparado para que la etapa de acciones semánticas verifique su significado y lo traduzca a JSON.

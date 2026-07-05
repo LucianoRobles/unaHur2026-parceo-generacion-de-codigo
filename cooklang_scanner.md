@@ -60,7 +60,7 @@ Validaciones adicionales:
 
 ---
 
-# Tabla de transiciones del SCANNER
+## Tabla de transiciones del SCANNER
 
 | Q | L | D | `_` | `"` | `{` | `}` | `;` | Blanco | EOF | OTRO | TOKEN | RETROCESO |
 |---|---|---|---|---|---|---|---|---|---|---|---|---:|
@@ -77,7 +77,7 @@ Validaciones adicionales:
 | `*q11` | - | - | - | - | - | - | - | - | - | - | PYC | 0 |
 | `*q12` | - | - | - | - | - | - | - | - | - | - | INT | 0 |
 
-## Explicación breve de la tabla
+### Explicación breve de la tabla
 
 - `q0` es el estado inicial.
 - Si lee una letra, pasa a `q1` para formar identificadores, palabras reservadas o unidades.
@@ -99,7 +99,7 @@ harina  → ID
 
 ---
 
-# CÓDIGO PYTHON DEL SCANNER CON PLY
+## CÓDIGO PYTHON DEL SCANNER CON PLY
 
 Para la implementación práctica del scanner se utiliza la herramienta **PLY**, específicamente el módulo `ply.lex`.
 
@@ -260,7 +260,7 @@ def analizar_codigo(codigo):
 
 ---
 
-# Prueba simple del scanner
+## Prueba simple del scanner
 
 ```python
 programa = '''
@@ -280,7 +280,7 @@ for token, lexema in resultado:
     print(token, "->", lexema)
 ```
 
-## Salida esperada
+### Salida esperada
 
 ```text
 RECIPE -> Recipe
@@ -326,7 +326,7 @@ LLAVE_CIERRA -> }
 
 ---
 
-# Prueba con identificador inválido
+## Prueba con identificador inválido
 
 ```python
 programa = '''
@@ -338,7 +338,7 @@ Recipe "Prueba" {
 resultado = analizar_codigo(programa)
 ```
 
-## Salida esperada
+### Salida esperada
 
 ```text
 SyntaxError: Identificador inválido: masa_
@@ -346,7 +346,7 @@ SyntaxError: Identificador inválido: masa_
 
 ---
 
-# Prueba con cadena sin cerrar
+## Prueba con cadena sin cerrar
 
 ```python
 programa = '''
@@ -358,7 +358,7 @@ Recipe "Tarta de manzana {
 resultado = analizar_codigo(programa)
 ```
 
-## Salida esperada
+### Salida esperada
 
 ```text
 SyntaxError: Caracter no reconocido '"' en la línea 2
@@ -366,7 +366,7 @@ SyntaxError: Caracter no reconocido '"' en la línea 2
 
 ---
 
-# Nota importante
+## Nota importante
 
 En CookLang, una cantidad como:
 
@@ -410,7 +410,7 @@ Add 200 g harina;
 
 ---
 
-# Conclusión
+## Conclusión
 
 El scanner de CookLang fue definido formalmente mediante una tabla de lexemas y una tabla de transiciones.
 

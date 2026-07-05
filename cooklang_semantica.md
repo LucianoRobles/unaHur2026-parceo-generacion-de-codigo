@@ -137,7 +137,7 @@ Traducción esperada a JSON:
 
 ---
 
-# Implementación de acciones semánticas con PLY
+## Implementación de acciones semánticas con PLY
 
 La implementación semántica se integra dentro de las reglas del parser de PLY.
 
@@ -160,7 +160,7 @@ La variable `p[0]` representa el resultado semántico de la producción.
 
 ---
 
-## Código Python - Parser con acciones semánticas
+### Código Python - Parser con acciones semánticas
 
 ```python
 import json
@@ -451,7 +451,7 @@ def traducir_a_json(codigo):
 
 ---
 
-# Prueba con programa válido
+## Prueba con programa válido
 
 ```python
 programa = '''
@@ -468,7 +468,7 @@ Recipe "Tarta de manzana" {
 print(traducir_a_json(programa))
 ```
 
-## Salida esperada
+### Salida esperada
 
 ```json
 {
@@ -519,7 +519,7 @@ print(traducir_a_json(programa))
 
 ---
 
-# Prueba con ingrediente no declarado
+## Prueba con ingrediente no declarado
 
 ```python
 programa = '''
@@ -532,7 +532,7 @@ Recipe "Prueba" {
 print(traducir_a_json(programa))
 ```
 
-## Salida esperada
+### Salida esperada
 
 ```text
 Error semántico: ingrediente no declarado 'azucar'
@@ -540,7 +540,7 @@ Error semántico: ingrediente no declarado 'azucar'
 
 ---
 
-# Prueba con cantidad inválida
+## Prueba con cantidad inválida
 
 ```python
 programa = '''
@@ -552,7 +552,7 @@ Recipe "Prueba" {
 print(traducir_a_json(programa))
 ```
 
-## Salida esperada
+### Salida esperada
 
 ```text
 Error semántico: la cantidad debe ser mayor que cero
@@ -560,7 +560,7 @@ Error semántico: la cantidad debe ser mayor que cero
 
 ---
 
-# Prueba con ingrediente repetido
+## Prueba con ingrediente repetido
 
 ```python
 programa = '''
@@ -573,7 +573,7 @@ Recipe "Prueba" {
 print(traducir_a_json(programa))
 ```
 
-## Salida esperada
+### Salida esperada
 
 ```text
 Error semántico: ingrediente repetido 'harina'
@@ -581,7 +581,7 @@ Error semántico: ingrediente repetido 'harina'
 
 ---
 
-# Conclusión
+## Conclusión
 
 Las acciones semánticas permiten verificar que un programa válido sintácticamente también tenga sentido dentro del dominio de las recetas de cocina.
 
