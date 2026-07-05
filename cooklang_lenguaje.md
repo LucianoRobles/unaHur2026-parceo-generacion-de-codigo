@@ -467,6 +467,6 @@ Posible traducción a JSON:
 
 CookLang fue definido como un lenguaje simple orientado a un único dominio: la descripción estructurada de recetas de cocina.
 
-Su especificación léxica, sintáctica y semántica delimita con precisión qué instrucciones son válidas —agregar ingredientes, mezclar, cocinar, enfriar, condicionar una acción y establecer porciones—, dejando fuera de alcance funcionalidades más generales como cálculos, bucles o subrecetas.
+Su especificación léxica, sintáctica y semántica delimita con precisión qué instrucciones son válidas agregar ingredientes, mezclar, cocinar, enfriar, condicionar una acción y establecer porciones, dejando fuera de alcance funcionalidades más generales como cálculos, bucles o subrecetas.
 
 Esta especificación es la base sobre la que se implementan, en documentos separados, el scanner (`cooklang_scanner.md`), el parser (`cooklang_parser.md`) y las acciones semánticas con su traducción a JSON (`cooklang_semantica.md`).

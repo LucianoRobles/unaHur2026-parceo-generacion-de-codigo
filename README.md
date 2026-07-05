@@ -8,13 +8,13 @@ El objetivo del proyecto es definir un lenguaje propio y luego implementar sus c
 
 CookLang permite escribir recetas utilizando instrucciones claras para:
 
-- definir una receta;
-- agregar ingredientes;
-- mezclar ingredientes;
-- cocinar una preparación;
-- enfriar una preparación;
-- indicar cantidad de porciones;
-- utilizar una estructura condicional `If then else`.
+- Definir una receta.
+- Agregar ingredientes.
+- Mezclar ingredientes.
+- Cocinar una preparación.
+- Enfriar una preparación.
+- Indicar cantidad de porciones.
+- Utilizar una estructura condicional `If then else`.
 
 Ejemplo:
 
@@ -38,7 +38,7 @@ El proyecto se organiza en las siguientes etapas:
 3. Implementación del parser — ✅ `cooklang_parser.md`
 4. Implementación de acciones semánticas y traducción a JSON — ✅ `cooklang_semantica.md`
 5. Casos de prueba automatizados — ✅ `cooklang_automation_test.ipynb`
-6. Conclusiones — cada documento incluye su propia conclusión al final de la etapa correspondiente.
+6. Conclusiones — ✅ `cada documento incluye su propia conclusión al final de la etapa correspondiente.`
 
 ## Estructura del repositorio
 
@@ -79,7 +79,7 @@ PYC
 
 El parser valida que la secuencia de tokens respete la gramática de CookLang (`cooklang_parser.md`).
 
-Sobre esa base, las acciones semánticas verifican reglas que la gramática por sí sola no puede expresar —cantidades y tiempos positivos, ingredientes declarados antes de usarse, ingredientes no repetidos— y traducen la receta a una estructura JSON (`cooklang_semantica.md`).
+Sobre esa base, las acciones semánticas verifican reglas que la gramática por sí sola no puede expresar cantidades y tiempos positivos, ingredientes declarados antes de usarse, ingredientes no repetidos y traducen la receta a una estructura JSON (`cooklang_semantica.md`).
 
 Ejemplo de traducción:
 
@@ -109,7 +109,7 @@ El pipeline completo (scanner, parser, acciones semánticas y casos de prueba) e
 
 1. Instalar la dependencia: `pip install ply` (primera celda del notebook).
 2. Ejecutar las celdas en orden, de arriba hacia abajo.
-3. La celda de imports fija un `__file__` dummy en el módulo `__main__` — es necesario porque PLY inspecciona el archivo fuente del módulo llamador para validar reglas, y en Jupyter `__main__` no tiene `__file__` propio.
+3. La celda de imports fija un `__file__` dummy en el módulo `__main__` es necesario porque PLY inspecciona el archivo fuente del módulo llamador para validar reglas, y en Jupyter `__main__` no tiene `__file__` propio.
 4. El parser se construye con `yacc.yacc(write_tables=False, debug=False)` para no depender de archivos de tabla (`parsetab.py`, `parser.out`) cacheados en disco entre corridas.
 
 ## Estado del proyecto
