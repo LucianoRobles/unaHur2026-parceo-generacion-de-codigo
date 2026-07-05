@@ -1,7 +1,5 @@
 # Acciones semánticas de CookLang
 
-## Objetivo
-
 Las acciones semánticas de **CookLang** se encargan de analizar el significado del programa una vez que ya fue aceptado sintácticamente por el parser.
 
 Mientras que el parser verifica que las instrucciones estén escritas con la estructura correcta, las acciones semánticas verifican que esas instrucciones tengan sentido dentro de una receta.
